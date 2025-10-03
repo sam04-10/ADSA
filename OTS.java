@@ -1,67 +1,68 @@
-import java.util.*;
-public class ops
- {
-// Swap two elements in the array
-public static void swap(int[] arr, int i, int j)
- {
-int temp = arr[i];
-arr[i] = arr[j];
-arr[j] = temp;
-}
-// Optimized bubble sort implementation
-public static void bubbleSort(int[] arr)
+import java.util.Scanner;
+
+public class OptimalTapeStorage
 {
-int n = arr.length;
-boolean swapped;
-for (int i = 0; i < n - 1; i++)
-{
-swapped = false;
-for (int j = 0; j < n - 1 - i; j++)
-{
-if (arr[j] > arr[j + 1])
-{
-swap(arr, j, j + 1);
-swapped = true;
-}
-}
-// If no two elements were swapped, array is already sorted
-if (!swapped)
-{
-break;
-}
-}
-}
-public static void main(String[] args)
-{
-Scanner sc = new Scanner(System.in);
-System.out.print("Enter the number of files: ");
-int num = sc.nextInt();
-int[] sizes = new int[num];
-for (int i = 0; i < num; i++)
-{
-System.out.print("Enter the size of File " + (i + 1) + ": ");
-sizes[i] = sc.nextInt();
-}
-// Step 1: Sort file sizes
-bubbleSort(sizes);
-// Step 2: Calculate cumulative retrieval times
-int[] retrievalTimes = new int[num];
-retrievalTimes[0] = sizes[0];
-for (int i = 1; i < num; i++)
- {
-retrievalTimes[i] = retrievalTimes[i - 1] + sizes[i];
-}
-// Step 3: Compute Mean Retrieval Time
-float totalRetrievalTime = 0;
-for (int time : retrievalTimes)
-{
-totalRetrievalTime += time;
-{
-float meanRetrievalTime = totalRetrievalTime / num;
-// Step 4: Display results
-System.out.println("\nSorted File Sizes: " + Arrays.toString(sizes));
-System.out.println("Retrieval Times: " + Arrays.toString(retrievalTimes));
-System.out.printf("The Mean Retrieval Time is %.2f%n", meanRetrievalTime);
-sc.close();
-}
- }
+
+    // Bubble Sort to arrange program lengths in ascending order
+    static void bubbleSort(int arr[], int n)
+    {
+        for (int i = 0; i < n - 1; i++)
+        {
+            for (int j = 0; j < n - i - 1; j++)
+            {
+                if (arr[j] > arr[j + 1])
+                {
+                    // swap
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of programs: ");
+        int n = sc.nextInt();
+
+        int[] programs = new int[n];
+
+        System.out.println("Enter program lengths:");
+        for (int i = 0; i < n; i++)
+        {
+            programs[i] = sc.nextInt();
+        }
+
+        // Step 1: Sort using Bubble Sort
+        bubbleSort(programs, n);
+
+        // Step 2: Calculate Retrieval Time and MRT
+        int[] retrievalTime = new int[n];
+        retrievalTime[0] = programs[0];
+        int total = retrievalTime[0];
+
+        for (int i = 1; i < n; i++)
+        {
+            retrievalTime[i] = retrievalTime[i - 1] + programs[i];
+            total += retrievalTime[i];
+        }
+
+        double MRT = (double) total / n;
+
+        // Output results
+        System.out.println("\nOptimal Order of Programs (after sorting):");
+        for (int i = 0; i < n; i++)
+        {
+            System.out.print(programs[i] + " ");
+        }
+
+        System.out.println("\n\nRetrieval Times:");
+        for (int i = 0; i < n; i++)
+        {
+            System.out.println("Program " + (i + 1) + " : " + retrievalTime[i]);
+        }
+
+        System.out.println("\nMean Retrieval Time (MRT) = " + MRT);
